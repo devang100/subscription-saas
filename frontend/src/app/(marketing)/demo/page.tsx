@@ -97,9 +97,9 @@ export default function DemoPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                                className="p-6 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 hover:border-indigo-500 dark:hover:border-indigo-500 transition-all"
+                                className="p-6 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 hover:border-indigo-500 dark:hover:border-indigo-500 transition-all text-center"
                             >
-                                <feature.icon className="w-10 h-10 text-indigo-600 dark:text-indigo-400 mb-4" />
+                                <feature.icon className="w-10 h-10 text-indigo-600 dark:text-indigo-400 mb-4 mx-auto" />
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                     {feature.title}
                                 </h3>
