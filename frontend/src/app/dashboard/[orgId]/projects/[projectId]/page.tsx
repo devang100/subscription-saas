@@ -133,6 +133,268 @@ export default function KanbanBoardPage() {
     const [newComment, setNewComment] = useState('');
     const [logData, setLogData] = useState({ minutes: '', description: '' });
 
+    // Dnd State
+    const [activeDragId, setActiveDragId] = useState<string | null>(null);
+
+    // Filters
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterPriority, setFilterPriority] = useState('ALL');
+
+    const filteredTasks = useMemo(() => {
+        return tasks.filter(t => {
+            const matchesSearch = t.title.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesPriority = filterPriority === 'ALL' || t.priority === filterPriority;
+            return matchesSearch && matchesPriority;
+        });
+    }, [tasks, searchQuery, filterPriority]);
+
+    // Calendar State
+    const [viewMode, setViewMode] = useState<'BOARD' | 'CALENDAR'>('BOARD');
+    const [currentDate, setCurrentDate] = useState(new Date());
+
+    const columns = [
+        { id: 'TODO', label: 'To Do', color: 'bg-gray-100 dark:bg-zinc-900/50 border-gray-200 dark:border-zinc-800' },
+        { id: 'IN_PROGRESS', label: 'In Progress', color: 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900/30' },
+        { id: 'REVIEW', label: 'Review', color: 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-100 dark:border-yellow-900/30' },
+        { id: 'DONE', label: 'Done', color: 'bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900/30' }
+    ];
+
+    const getDaysInMonth = (year: number, month: number) => {
+        return new Date(year, month + 1, 0).getDate();
+    };
+
+    const getFirstDayOfMonth = (year: number, month: number) => {
+        return new Date(year, month, 1).getDay();
+    };
+
+    const fetchTasks = () => {
+        api.get(`/projects/${projectId}/tasks`)
+            .then(res => {
+                setTasks(res.data.data);
+                setLoading(false);
+            })
+            .catch(console.error);
+    };
+
+    const fetchTeam = () => {
+        api.get(`/organizations/${orgId}/members`)
+            .then(res => {
+                setTeam(res.data.data.members || []);
+            })
+            .catch(console.error);
+    };
+
+    const fetchComments = (taskId: string) => {
+        api.get(`/tasks/${taskId}/comments`).then(res => setComments(res.data.data));
+    };
+
+    const fetchTimeLogs = (taskId: string) => {
+        api.get(`/tasks/${taskId}/timelogs`).then(res => setTimeLogs(res.data.data));
+    };
+
+    const handleAddComment = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingTaskId || !newComment.trim()) return;
+        try {
+            await api.post(`/tasks/${editingTaskId}/comments`, { content: newComment });
+            setNewComment('');
+            fetchComments(editingTaskId);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleLogTime = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingTaskId || !logData.minutes) return;
+        try {
+            await api.post(`/tasks/${editingTaskId}/timelogs`, logData);
+            setLogData({ minutes: '', description: '' });
+            fetchTimeLogs(editingTaskId);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files?.length || !editingTaskId) return;
+        const file = e.target.files[0];
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('taskId', editingTaskId);
+
+        try {
+            const res = await api.post('/uploads', fd, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            setAttachments(prev => [...prev, res.data.data]);
+        } catch (error) {
+            console.error('Upload failed', error);
+            alert('Upload failed');
+        }
+    };
+
+    const handleDeleteFile = async (attId: string) => {
+        if (!confirm('Delete file?')) return;
+        try {
+            await api.delete(`/uploads/${attId}`);
+            setAttachments(prev => prev.filter(a => a.id !== attId));
+        } catch (error) {
+            console.error('Delete failed', error);
+        }
+    };
+
+    const openEditModal = (task: any) => {
+        setEditingTaskId(task.id);
+        setFormData({
+            title: task.title,
+            description: task.description || '',
+            priority: task.priority,
+            assigneeId: task.assigneeId || '',
+            dueDate: task.dueDate ? task.dueDate.split('T')[0] : ''
+        });
+        setActiveTab('details');
+        setShowModal(true);
+        fetchComments(task.id);
+        fetchTimeLogs(task.id);
+        setAttachments(task.attachments || []);
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            if (editingTaskId) {
+                await api.patch(`/tasks/${editingTaskId}`, formData);
+            } else {
+                await api.post(`/projects/${projectId}/tasks`, formData);
+            }
+            if (!editingTaskId) {
+                setShowModal(false);
+            } else {
+                alert('Task updated');
+            }
+            if (!editingTaskId) {
+                setFormData({ title: '', description: '', priority: 'MEDIUM', assigneeId: '', dueDate: '' });
+            }
+            fetchTasks();
+        } catch (error: any) {
+            alert(error.response?.data?.message || 'Failed to save task');
+        }
+    };
+
+    const handleDelete = async (taskId: string) => {
+        if (!confirm("Delete this task?")) return;
+        try {
+            await api.delete(`/tasks/${taskId}`);
+            setTasks(prev => prev.filter(t => t.id !== taskId));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        if (projectId) {
+            fetchTasks();
+            fetchTeam();
+        }
+    }, [projectId]);
+
+    const renderCalendar = () => {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const daysInMonth = getDaysInMonth(year, month);
+        const firstDay = getFirstDayOfMonth(year, month);
+        const days = [];
+
+        // Empty slots for previous month
+        for (let i = 0; i < firstDay; i++) {
+            days.push(<div key={`empty-${i}`} className="bg-gray-50/20 dark:bg-zinc-900/20 border border-gray-100 dark:border-zinc-800/50 min-h-[120px]"></div>);
+        }
+
+        // Days
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const dayTasks = tasks.filter(t => t.dueDate && t.dueDate.startsWith(dateStr));
+            const isToday = new Date().toDateString() === new Date(year, month, d).toDateString();
+
+            days.push(
+                <div key={d} className={`min-h-[120px] p-2 border border-gray-200 dark:border-zinc-800 relative group transition-colors hover:bg-white dark:hover:bg-zinc-900 ${isToday ? 'bg-indigo-50/30 dark:bg-indigo-900/10' : 'bg-gray-50/30 dark:bg-zinc-950'}`}>
+                    <div className={`text-sm font-semibold mb-2 ${isToday ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'}`}>
+                        {d} {isToday && '(Today)'}
+                    </div>
+                    <div className="space-y-1">
+                        {dayTasks.map(task => (
+                            <div
+                                key={task.id}
+                                onClick={() => openEditModal(task)}
+                                className="px-2 py-1 rounded text-xs bg-white dark:bg-zinc-800 border-l-2 shadow-sm cursor-pointer hover:shadow-md transition-all truncate"
+                                style={{ borderLeftColor: task.status === 'DONE' ? '#22c55e' : task.status === 'IN_PROGRESS' ? '#3b82f6' : '#9ca3af' }}
+                            >
+                                <span className="font-medium text-gray-900 dark:text-gray-200">{task.title}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 cursor-pointer text-gray-300 hover:text-indigo-500 transition-opacity"
+                        onClick={() => {
+                            setEditingTaskId(null);
+                            setFormData({ title: '', description: '', priority: 'MEDIUM', assigneeId: '', dueDate: dateStr });
+                            setActiveTab('details');
+                            setShowModal(true);
+                        }}>
+                        +
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="flex-1 flex flex-col overflow-hidden bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 m-6 p-6">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                        {currentDate.toLocaleDateString('default', { month: 'long', year: 'numeric' })}
+                    </h2>
+                    <div className="flex gap-2">
+                        <button onClick={() => setCurrentDate(new Date(year, month - 1, 1))} className="p-1 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded">←</button>
+                        <button onClick={() => setCurrentDate(new Date(year, month + 1, 1))} className="p-1 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded">→</button>
+                    </div>
+                </div>
+                <div className="grid grid-cols-7 gap-px rounded-lg overflow-hidden border border-gray-200 dark:border-zinc-800 bg-gray-200 dark:bg-zinc-800">
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
+                        <div key={d} className="bg-gray-50 dark:bg-zinc-900 p-2 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            {d}
+                        </div>
+                    ))}
+                    {days}
+                </div>
+            </div>
+        );
+    };
+
+    // Socket Listener
+    const socket = useSocket();
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleTaskUpdate = (updatedTask: any) => {
+            setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
+        };
+
+        const handleTaskCreate = (newTask: any) => {
+            setTasks(prev => {
+                if (prev.find(t => t.id === newTask.id)) return prev;
+                return [newTask, ...prev];
+            });
+        };
+
+        socket.on('task_updated', handleTaskUpdate);
+        socket.on('task_created', handleTaskCreate);
+
+        return () => {
+            socket.off('task_updated', handleTaskUpdate);
+            socket.off('task_created', handleTaskCreate);
+        };
+    }, [socket]);
+
     // Track original status to verify changes in DragEnd
     const dragStartStatus = useRef<string | null>(null);
 
