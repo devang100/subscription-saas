@@ -13,10 +13,13 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response, nex
     try {
         const orgId = req.params.orgId as string;
         const { planId } = req.body;
+        console.log('Received planId:', planId);
 
         if (!planId) return next(new AppError('Plan ID is required', 400));
 
         const plan = await prisma.plan.findUnique({ where: { id: planId } });
+        console.log('Plan lookup result:', plan);
+
         if (!plan) return next(new AppError('Invalid Plan ID', 400));
 
         if (!plan.stripePriceId) {
