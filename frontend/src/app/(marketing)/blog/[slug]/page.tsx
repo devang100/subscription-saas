@@ -72,7 +72,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                 <div className="border-t border-gray-100 dark:border-zinc-800 mt-16 pt-8 flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                        <img src="/images/devang.jpg" alt="Devang Patel" className="w-12 h-12 rounded-full object-cover" />
+                        <img src="/images/devang.png" alt="Devang Patel" className="w-12 h-12 rounded-full object-cover" />
                         <div>
                             <p className="font-bold text-gray-900 dark:text-white">Devang Patel</p>
                             <p className="text-sm text-gray-500">Founder & CEO</p>

@@ -148,7 +148,7 @@ export default function LoginPage() {
                             "The best decision we made for our agency. Stratis helped us scale from 5 to 50 employees without the chaos."
                         </p>
                         <div className="flex items-center gap-3">
-                            <img src="/images/devang.jpg" alt="Devang Patel" className="w-10 h-10 rounded-full object-cover" />
+                            <img src="/images/devang.png" alt="Devang Patel" className="w-10 h-10 rounded-full object-cover" />
                             <div>
                                 <p className="text-white font-medium text-sm">Devang Patel</p>
                                 <p className="text-gray-400 text-xs">CEO, CreativeWorks</p>
