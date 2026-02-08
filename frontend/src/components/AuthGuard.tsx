@@ -19,6 +19,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
             if (!token) {
                 // No token, must login
                 console.log('No token found, redirecting to login');
+                setChecked(false);
                 router.replace('/login');
                 return;
             }
@@ -26,18 +27,35 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
             if (!user) {
                 try {
                     await fetchUser();
+                    setChecked(true);
                 } catch (error) {
                     console.error('Failed to fetch user in guard', error);
                     localStorage.removeItem('accessToken');
+                    setChecked(false);
                     router.replace('/login');
                     return;
                 }
+            } else {
+                setChecked(true);
             }
-            setChecked(true);
         };
 
         verify();
-    }, [pathname, String(user)]); // Re-verify on route change
+    }, [pathname, user, router, fetchUser]); // Re-verify when pathname or user changes
+
+    // Listen for storage changes (e.g., logout in another tab or manual token removal)
+    useEffect(() => {
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === 'accessToken' && !e.newValue) {
+                // Token was removed, force re-check
+                console.log('Token removed, forcing re-verification');
+                setChecked(false);
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, []);
 
     // While checking initial token presence or fetching user
     if (!checked && !user) {
