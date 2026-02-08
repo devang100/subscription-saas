@@ -5,7 +5,7 @@ import { AppError } from '../utils/AppError';
 
 export interface AuthRequest extends Request {
     user?: any; // strict typing would be User
-    file?: Express.Multer.File; // Add for uploads
+    file?: any; // Add for uploads (Multer)
 }
 
 export const protect = async (req: AuthRequest, res: Response, next: NextFunction) => {
