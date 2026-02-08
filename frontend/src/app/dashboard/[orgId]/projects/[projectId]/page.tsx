@@ -136,6 +136,17 @@ export default function KanbanBoardPage() {
     // Track original status to verify changes in DragEnd
     const dragStartStatus = useRef<string | null>(null);
 
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5,
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
     const handleDragStart = (event: DragStartEvent) => {
         const { active } = event;
         setActiveDragId(active.id as string);
