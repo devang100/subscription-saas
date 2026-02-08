@@ -53,6 +53,7 @@ function SortableTaskItem({ task, onClick, onDelete, columnId }: any) {
         transform: CSS.Translate.toString(transform),
         transition,
         opacity: isDragging ? 0.3 : 1,
+        touchAction: 'none', // Prevent scrolling on touch devices/trackpads while dragging
     };
 
     return (
