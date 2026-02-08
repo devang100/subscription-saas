@@ -189,7 +189,7 @@ export default function RegisterPage() {
                             <img src="/images/devang.png" alt="Devang Patel" className="w-10 h-10 rounded-full object-cover" />
                             <div>
                                 <p className="text-white font-medium text-sm">Devang Patel</p>
-                                <p className="text-gray-400 text-xs">Founder, DesignCo</p>
+                                <p className="text-gray-400 text-xs">Founder & CEO</p>
                             </div>
                         </div>
                     </div>
