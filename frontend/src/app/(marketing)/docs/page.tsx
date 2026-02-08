@@ -16,9 +16,11 @@ export default function DocsPage() {
                         <p className="text-indigo-100 mb-8 max-w-lg">
                             Get up and running with Stratis in less than 5 minutes. Learn the core concepts and basic setup.
                         </p>
-                        <button className="bg-white text-indigo-600 px-6 py-3 rounded-lg font-bold hover:bg-indigo-50 transition-colors">
-                            Read Guide
-                        </button>
+                        <Link href="/docs/quick-start">
+                            <button className="bg-white text-indigo-600 px-6 py-3 rounded-lg font-bold hover:bg-indigo-50 transition-colors">
+                                Read Guide
+                            </button>
+                        </Link>
                     </div>
                 </div>
 

@@ -32,19 +32,24 @@ const initEmail = async () => {
 };
 
 export const sendEmail = async (to: string, subject: string, html: string) => {
-    await initEmail();
+    try {
+        await initEmail();
 
-    if (!transporter) return;
+        if (!transporter) return;
 
-    const info = await transporter.sendMail({
-        from: '"Stratis" <system@stratis.com>',
-        to,
-        subject,
-        html,
-    });
+        const info = await transporter.sendMail({
+            from: '"Stratis" <system@stratis.com>',
+            to,
+            subject,
+            html,
+        });
 
-    console.log('📨 Email sent: %s', info.messageId);
-    console.log('🔗 Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        console.log('📨 Email sent: %s', info.messageId);
+        console.log('🔗 Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    } catch (error) {
+        console.error('Failed to send email:', error);
+        // Do not throw, just log.
+    }
 };
 
 export const sendInvitationEmail = async (email: string, orgName: string, role: string, inviteLink: string) => {

@@ -9,12 +9,15 @@ export default function BlogPage() {
                 {[1, 2, 3].map((_, i) => (
                     <Link href="/blog/introducing-stratis-2-0" key={i} className="group cursor-pointer flex flex-col h-full">
                         <article className="flex flex-col h-full">
-                            <div className="bg-gradient-to-tr from-gray-100 to-gray-200 dark:from-zinc-800 dark:to-zinc-700 aspect-video rounded-xl mb-4 overflow-hidden relative">
+                            <div className="aspect-video rounded-xl mb-4 overflow-hidden relative">
+                                <img
+                                    src={`https://images.unsplash.com/photo-${i === 0 ? '1460925895917-afdab827c52f' : i === 1 ? '1522071820081-009f0129c71c' : '1553877602-c9d290c0354d'}?auto=format&fit=crop&w=800&q=80`}
+                                    alt="Blog cover"
+                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                                />
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
                                     <span className="text-white font-bold bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30">Read Article</span>
                                 </div>
-                                {/* Abstract Pattern */}
-                                <div className={`absolute inset-0 opacity-10 ${i % 2 === 0 ? 'bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500 via-transparent to-transparent' : 'bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-violet-500 via-gray-100 to-gray-100'}`} />
                             </div>
                             <div className="flex items-center gap-3 text-xs font-medium text-gray-500 mb-2">
                                 <span className="flex items-center gap-1 text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded">

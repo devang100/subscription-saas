@@ -34,12 +34,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     </p>
                 </header>
 
-                <div className="aspect-video rounded-2xl overflow-hidden mb-12 relative bg-gradient-to-tr from-gray-100 to-gray-200 dark:from-zinc-800 dark:to-zinc-700">
-                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500 via-transparent to-transparent" />
+                <div className="aspect-video rounded-2xl overflow-hidden mb-12 relative shadow-lg">
+                    <img
+                        src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80"
+                        alt="Stratis 2.0"
+                        className="object-cover w-full h-full"
+                    />
                 </div>
 
-                <div className="prose prose-lg dark:prose-invert mx-auto">
-                    <p>
+                <div className="prose prose-lg dark:prose-invert mx-auto prose-indigo prose-headings:font-bold prose-h2:text-3xl prose-h2:mt-12 prose-img:rounded-xl">
+                    <p className="lead text-xl text-gray-600 dark:text-gray-300">
                         Today we are excited to announce the general availability of Stratis 2.0. This release represents a major milestone in our mission to provide the most powerful and intuitive agency operating system on the market.
                     </p>
                     <h2>Everything New</h2>
@@ -51,9 +55,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         <li><strong>Real-time Collaboration:</strong> See who is working on what in real-time.</li>
                         <li><strong>New API:</strong> A completely documented API for building your own integrations.</li>
                     </ul>
-                    <blockquote>
-                        "Stratis 2.0 completely changed how our team operates. The speed improvements alone are worth the upgrade."
-                    </blockquote>
+                    <div className="bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500 p-6 my-8 rounded-r-lg not-prose">
+                        <blockquote className="text-xl font-medium italic text-gray-900 dark:text-white">
+                            "Stratis 2.0 completely changed how our team operates. The speed improvements alone are worth the upgrade."
+                        </blockquote>
+                        <cite className="block mt-4 text-sm font-bold text-gray-500 not-italic">— Sarah, CTO at TechFlow</cite>
+                    </div>
                     <p>
                         We can't wait to see what you build with the new version of Stratis. Assuming you are ready to scale, this is the tool you have been waiting for.
                     </p>
@@ -65,7 +72,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                 <div className="border-t border-gray-100 dark:border-zinc-800 mt-16 pt-8 flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-200 dark:bg-zinc-800 rounded-full flex items-center justify-center text-xl font-bold text-gray-500">
+                        <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center text-xl font-bold text-indigo-600 dark:text-indigo-400">
                             S
                         </div>
                         <div>
@@ -73,10 +80,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             <p className="text-sm text-gray-500">Product Engineering</p>
                         </div>
                     </div>
-
-                    <button className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 transition-colors">
-                        <Share2 size={20} /> Share
-                    </button>
                 </div>
             </div>
         </article>
