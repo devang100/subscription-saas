@@ -11,43 +11,45 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const [checked, setChecked] = useState(false);
 
     useEffect(() => {
-        const checkAuth = async () => {
+        const verify = async () => {
+            if (typeof window === 'undefined') return;
+
             const token = localStorage.getItem('accessToken');
+
             if (!token) {
-                // No token found, redirect immediately
-                if (pathname !== '/login' && pathname !== '/register') {
-                    router.push('/login');
-                }
+                // No token, must login
+                console.log('No token found, redirecting to login');
+                router.replace('/login');
                 return;
             }
 
             if (!user) {
-                // Token exists but user not loaded, fetch user
                 try {
                     await fetchUser();
                 } catch (error) {
+                    console.error('Failed to fetch user in guard', error);
                     localStorage.removeItem('accessToken');
-                    router.push('/login');
+                    router.replace('/login');
+                    return;
                 }
             }
             setChecked(true);
         };
 
-        checkAuth();
-    }, [user, fetchUser, router, pathname]);
+        verify();
+    }, [pathname, String(user)]); // Re-verify on route change
 
-    // Show nothing while checking authentication to prevent flash of protected content
+    // While checking initial token presence or fetching user
     if (!checked && !user) {
-        return null;
+        return (
+            <div className="h-screen w-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            </div>
+        );
     }
 
-    // If still loading user profile but key exists, show loading check
-    if (isLoading && !user) {
-        // Optional: Spinner here
-        return <div className="h-screen w-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-        </div>;
-    }
+    // If check complete but no user (and no token handled above), render nothing until redirect happens
+    if (checked && !user) return null;
 
     return <>{children}</>;
 }
