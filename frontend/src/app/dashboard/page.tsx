@@ -141,5 +141,6 @@ export default function DashboardLayout() {
                 {/* Global AI Assistant */}
                 <AIAssistant />
             </div>
-            );
+        </AuthGuard>
+    );
 }
