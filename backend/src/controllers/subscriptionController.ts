@@ -17,8 +17,22 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response, nex
 
         if (!planId) return next(new AppError('Plan ID is required', 400));
 
-        const plan = await prisma.plan.findUnique({ where: { id: planId } });
+        let plan = await prisma.plan.findUnique({ where: { id: planId } });
         console.log('Plan lookup result:', plan);
+
+        // Fallback: Try case-insensitive lookup if direct ID failed
+        if (!plan) {
+            console.log('Direct plan lookup failed. Trying case-insensitive search...');
+            const fallbackPlan = await prisma.plan.findFirst({
+                where: {
+                    OR: [
+                        { id: { equals: planId, mode: 'insensitive' } },
+                        { name: { equals: planId, mode: 'insensitive' } }
+                    ]
+                }
+            });
+            if (fallbackPlan) plan = fallbackPlan;
+        }
 
         if (!plan) return next(new AppError('Invalid Plan ID', 400));
 
