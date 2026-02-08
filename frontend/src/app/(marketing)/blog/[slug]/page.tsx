@@ -59,7 +59,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         <blockquote className="text-xl font-medium italic text-gray-900 dark:text-white">
                             "Stratis 2.0 completely changed how our team operates. The speed improvements alone are worth the upgrade."
                         </blockquote>
-                        <cite className="block mt-4 text-sm font-bold text-gray-500 not-italic">— Sarah, CTO at TechFlow</cite>
+                        <cite className="block mt-4 text-sm font-bold text-gray-500 not-italic">— Devang Patel, CEO at Stratis</cite>
                     </div>
                     <p>
                         We can't wait to see what you build with the new version of Stratis. Assuming you are ready to scale, this is the tool you have been waiting for.

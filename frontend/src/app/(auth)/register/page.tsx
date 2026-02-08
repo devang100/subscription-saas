@@ -188,7 +188,7 @@ export default function RegisterPage() {
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-orange-500" />
                             <div>
-                                <p className="text-white font-medium text-sm">Sarah Chen</p>
+                                <p className="text-white font-medium text-sm">Devang Patel</p>
                                 <p className="text-gray-400 text-xs">Founder, DesignCo</p>
                             </div>
                         </div>
