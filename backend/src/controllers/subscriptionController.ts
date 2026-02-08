@@ -69,3 +69,27 @@ export const getSubscription = async (req: AuthRequest, res: Response, next: Nex
     // Get current sub details
     res.status(200).json({ success: true, data: {} });
 };
+
+// Emergency Seed Endpoint for Production
+export const seedPlans = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+        const plans = [
+            { id: 'PRO', name: 'Pro', stripePriceId: 'price_1SqaBGLEDmCRYrGAKZnWaEd6', maxUsers: 10 },
+            { id: 'ENTERPRISE', name: 'Enterprise', stripePriceId: 'price_1SqaBHLEDmCRYrGAkiyz4GIW', maxUsers: 100 },
+            { id: 'FREE', name: 'Free', stripePriceId: null, maxUsers: 2 }
+        ];
+
+        const results = [];
+        for (const p of plans) {
+            const result = await prisma.plan.upsert({
+                where: { id: p.id },
+                update: { stripePriceId: p.stripePriceId },
+                create: p
+            });
+            results.push(result);
+        }
+        res.json({ success: true, message: 'Plans seeded successfully', data: results });
+    } catch (error) {
+        next(error);
+    }
+};
