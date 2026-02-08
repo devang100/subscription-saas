@@ -186,7 +186,7 @@ export default function RegisterPage() {
                             "Agency OS effectively replaced 4 different tools we were using. It keeps our entire team and clients synced."
                         </p>
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-orange-500" />
+                            <img src="/images/devang.jpg" alt="Devang Patel" className="w-10 h-10 rounded-full object-cover" />
                             <div>
                                 <p className="text-white font-medium text-sm">Devang Patel</p>
                                 <p className="text-gray-400 text-xs">Founder, DesignCo</p>

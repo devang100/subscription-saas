@@ -72,12 +72,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                 <div className="border-t border-gray-100 dark:border-zinc-800 mt-16 pt-8 flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center text-xl font-bold text-indigo-600 dark:text-indigo-400">
-                            S
-                        </div>
+                        <img src="/images/devang.jpg" alt="Devang Patel" className="w-12 h-12 rounded-full object-cover" />
                         <div>
-                            <p className="font-bold text-gray-900 dark:text-white">Stratis Team</p>
-                            <p className="text-sm text-gray-500">Product Engineering</p>
+                            <p className="font-bold text-gray-900 dark:text-white">Devang Patel</p>
+                            <p className="text-sm text-gray-500">Founder & CEO</p>
                         </div>
                     </div>
                 </div>
