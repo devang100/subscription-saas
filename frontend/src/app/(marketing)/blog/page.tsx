@@ -11,7 +11,11 @@ export default function BlogPage() {
                         <article className="flex flex-col h-full">
                             <div className="aspect-video rounded-xl mb-4 overflow-hidden relative">
                                 <img
-                                    src={`https://images.unsplash.com/photo-${i === 0 ? '1460925895917-afdab827c52f' : i === 1 ? '1522071820081-009f0129c71c' : '1553877602-c9d290c0354d'}?auto=format&fit=crop&w=800&q=80`}
+                                    src={[
+                                        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+                                        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+                                        "https://images.unsplash.com/photo-1553877602-c9d290c0354d?auto=format&fit=crop&w=800&q=80"
+                                    ][i]}
                                     alt="Blog cover"
                                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                                 />

@@ -20,6 +20,18 @@ async function main() {
         await prisma.$connect();
         console.log('Connected to Database');
 
+        // Ensure system roles exist
+        const roles = ['Owner', 'Admin', 'Member', 'Guest'];
+        for (const roleName of roles) {
+            const existing = await prisma.role.findUnique({ where: { name: roleName } });
+            if (!existing) {
+                await prisma.role.create({
+                    data: { name: roleName, isSystem: true, description: `System role: ${roleName}` }
+                });
+                console.log(`Created system role: ${roleName}`);
+            }
+        }
+
         // Create HTTP server from Express app
         const httpServer = createServer(app);
 

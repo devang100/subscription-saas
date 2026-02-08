@@ -18,6 +18,8 @@ export default function OrgDashboard() {
     const [org, setOrg] = useState<any>(null);
     const [stats, setStats] = useState<any>(null);
 
+    const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         if (orgId) {
             fetchData();
@@ -32,17 +34,28 @@ export default function OrgDashboard() {
             ]);
             setOrg(orgRes.data.data);
             setStats(statsRes.data.data);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to load dashboard', error);
+            setError(error.message || 'Failed to load dashboard data');
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading || !org || !stats) {
+    if (loading) {
         return (
             <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-zinc-950">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            </div>
+        );
+    }
+
+    if (error || !org || !stats) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-zinc-950 flex-col gap-4">
+                <div className="text-red-500 font-medium">Unable to load dashboard</div>
+                <p className="text-gray-500 text-sm">{error || 'Organization data missing'}</p>
+                <Link href="/dashboard" className="text-indigo-600 hover:underline">Return to Dashboard</Link>
             </div>
         );
     }
