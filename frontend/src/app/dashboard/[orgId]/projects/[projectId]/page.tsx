@@ -133,7 +133,7 @@ export default function KanbanBoardPage() {
     const [newComment, setNewComment] = useState('');
     const [logData, setLogData] = useState({ minutes: '', description: '' });
 
-    // Dnd State
+    // Dnd State (Trigger rebuild)
     const [activeDragId, setActiveDragId] = useState<string | null>(null);
 
     // Filters
