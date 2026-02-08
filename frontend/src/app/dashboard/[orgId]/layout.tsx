@@ -4,7 +4,6 @@ import Sidebar from '@/components/Sidebar';
 import NotificationBell from '@/components/NotificationBell';
 import { CommandPalette } from '@/components/CommandPalette';
 import { ThemeToggle } from '@/components/ThemeToggle';
-
 import AuthGuard from '@/components/AuthGuard';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
