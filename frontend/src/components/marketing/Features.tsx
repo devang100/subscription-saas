@@ -8,7 +8,8 @@ const features = [
         title: "Project Management",
         description: "Visualize your workflow with our intuitive Kanban board. Drag, drop, and done.",
         icon: Kanban,
-        color: "bg-blue-500",
+        bgColor: "bg-blue-100 dark:bg-blue-500/20",
+        iconColor: "text-blue-600 dark:text-blue-400",
         colSpan: "col-span-1 md:col-span-2",
         delay: 0
     },
@@ -16,7 +17,8 @@ const features = [
         title: "Real-time Collaboration",
         description: "Chat with your team and get instant updates on tasks and files.",
         icon: MessageSquare,
-        color: "bg-green-500",
+        bgColor: "bg-green-100 dark:bg-green-500/20",
+        iconColor: "text-green-600 dark:text-green-400",
         colSpan: "col-span-1",
         delay: 0.1
     },
@@ -24,7 +26,8 @@ const features = [
         title: "Automated Billing",
         description: "Handle subscriptions and invoices automatically via Stripe.",
         icon: CreditCard,
-        color: "bg-indigo-500",
+        bgColor: "bg-indigo-100 dark:bg-indigo-500/20",
+        iconColor: "text-indigo-600 dark:text-indigo-400",
         colSpan: "col-span-1",
         delay: 0.2
     },
@@ -32,7 +35,8 @@ const features = [
         title: "Client Portal",
         description: "Give your clients a dedicated space to view progress and approve work.",
         icon: Users,
-        color: "bg-violet-500",
+        bgColor: "bg-violet-100 dark:bg-violet-500/20",
+        iconColor: "text-violet-600 dark:text-violet-400",
         colSpan: "col-span-1 md:col-span-2",
         delay: 0.3
     }
@@ -61,8 +65,8 @@ export function Features() {
                             transition={{ duration: 0.5, delay: feature.delay }}
                             className={`${feature.colSpan} bg-white dark:bg-zinc-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-zinc-800 hover:shadow-xl transition-shadow group`}
                         >
-                            <div className={`w-12 h-12 rounded-lg ${feature.color} bg-opacity-10 dark:bg-opacity-20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                                <feature.icon className={`w-6 h-6 ${feature.color.replace('bg-', 'text-')}`} />
+                            <div className={`w-12 h-12 rounded-lg ${feature.bgColor} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                                <feature.icon className={`w-6 h-6 ${feature.iconColor}`} />
                             </div>
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{feature.title}</h3>
                             <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
