@@ -34,7 +34,7 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response, nex
             if (fallbackPlan) plan = fallbackPlan;
         }
 
-        if (!plan) return next(new AppError('Invalid Plan ID', 400));
+        if (!plan) return next(new AppError(`Invalid Plan ID: ${planId}`, 400));
 
         if (!plan.stripePriceId) {
             return next(new AppError('This plan cannot be purchased directly (Free plan?)', 400));
