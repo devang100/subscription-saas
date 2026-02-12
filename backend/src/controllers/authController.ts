@@ -75,7 +75,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                     const currentMembers = await tx.membership.count({
                         where: { organizationId: invite.organizationId }
                     });
-                    const limit = targetOrg.subscription?.plan?.maxUsers || 1;
+                    const limit = targetOrg.subscription?.plan?.maxUsers || 2;
 
                     if (currentMembers < limit) {
                         await tx.membership.create({

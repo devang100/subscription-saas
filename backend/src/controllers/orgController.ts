@@ -114,7 +114,7 @@ export const inviteMember = async (req: AuthRequest, res: Response, next: NextFu
             where: { organizationId: orgId, status: 'pending' }
         });
 
-        const maxUsers = orgData.subscription?.plan?.maxUsers || 1;
+        const maxUsers = orgData.subscription?.plan?.maxUsers || 2;
 
         if (currentCount + pendingInvites >= maxUsers) {
             return next(new AppError(`Plan limit reached (${maxUsers} users). You have ${currentCount} members and ${pendingInvites} pending invites.`, 403));

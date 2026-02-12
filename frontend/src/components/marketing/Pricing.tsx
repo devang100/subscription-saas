@@ -9,7 +9,7 @@ const plans = [
         name: "Starter",
         price: "Free",
         description: "Perfect for freelancers just starting out.",
-        features: ["1 User", "3 Projects", "Basic Support", "500MB Storage"],
+        features: ["2 Users", "3 Projects", "Basic Support", "500MB Storage"],
         cta: "Start for Free",
         href: "/register",
         popular: false
@@ -92,8 +92,8 @@ export function Pricing() {
                             <Link
                                 href={plan.href}
                                 className={`block w-full py-3 rounded-xl text-center font-bold transition-all ${plan.popular
-                                        ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg hover:shadow-indigo-500/30'
-                                        : 'bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-zinc-700'
+                                    ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg hover:shadow-indigo-500/30'
+                                    : 'bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-zinc-700'
                                     }`}
                             >
                                 {plan.cta}
