@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, Lock, Layers, ArrowRight, CheckCircle2, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -103,12 +104,7 @@ export default function LoginPage() {
                             </div>
 
                             <div>
-                                <div className="flex items-center justify-between mb-1.5">
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                                    <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-                                        Forgot password?
-                                    </a>
-                                </div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Password</label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                         <Lock className="h-5 w-5" />
@@ -123,6 +119,7 @@ export default function LoginPage() {
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
                                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors focus:outline-none"
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
                                     >
                                         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                     </button>
@@ -130,6 +127,25 @@ export default function LoginPage() {
                                 {errors.password && (
                                     <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
                                 )}
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <input
+                                        id="remember-me"
+                                        name="remember-me"
+                                        type="checkbox"
+                                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                    />
+                                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                                        Remember me
+                                    </label>
+                                </div>
+                                <div className="text-sm">
+                                    <Link href="#" className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
+                                        Forgot password?
+                                    </Link>
+                                </div>
                             </div>
                         </div>
 
@@ -150,6 +166,62 @@ export default function LoginPage() {
                                         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                                     </>
                                 )}
+                            </button>
+                        </div>
+
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <span className="w-full border-t border-gray-300 dark:border-gray-700" />
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 bg-white dark:bg-zinc-950 text-gray-500">
+                                    Or continue with
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                            <button
+                                type="button"
+                                className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F] dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800 transition-colors"
+                            >
+                                <svg className="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
+                                    <path
+                                        d="M12.0003 20.4499C16.6669 20.4499 20.5836 16.5332 20.5836 11.8666C20.5836 7.1999 16.6669 3.2832 12.0003 3.2832C7.3336 3.2832 3.41693 7.1999 3.41693 11.8666C3.41693 16.1499 6.5836 19.6999 10.6669 20.3332V14.3332H8.46693V11.8666H10.6669V9.9332C10.6669 7.76654 11.9669 6.56654 13.9336 6.56654C14.8669 6.56654 15.8503 6.7332 15.8503 6.7332V8.86654H14.7669C13.6836 8.86654 13.3336 9.5332 13.3336 10.2332V11.8666H15.7003L15.3169 14.3332H13.3336V20.3332C17.3836 19.6832 20.5836 16.1332 20.5836 11.8666Z"
+                                        fill="#1877F2"
+                                        fillOpacity="0"
+                                    />
+                                    <path
+                                        d="M12.0003 20.45C16.6669 20.45 20.5836 16.5333 20.5836 11.8667C20.5836 7.20002 16.6669 3.28336 12.0003 3.28336C7.3336 3.28336 3.41693 7.20002 3.41693 11.8667C3.41693 16.15 6.5836 19.7 10.6669 20.3334V14.3334H8.46693V11.8667H10.6669V9.93336C10.6669 7.76669 11.9669 6.56669 13.9336 6.56669C14.8669 6.56669 15.8503 6.73336 15.8503 6.73336V8.86669H14.7669C13.6836 8.86669 13.3336 9.53336 13.3336 10.2334V11.8667H15.7003L15.3169 14.3334H13.3336V20.3334C17.3836 19.6834 20.5836 16.1334 20.5836 11.8667Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                                <span className="text-sm font-semibold leading-6">GitHub</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F] dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800 transition-colors"
+                            >
+                                <svg className="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
+                                    <path
+                                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                        fill="#4285F4"
+                                    />
+                                    <path
+                                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                        fill="#34A853"
+                                    />
+                                    <path
+                                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                        fill="#FBBC05"
+                                    />
+                                    <path
+                                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                        fill="#EA4335"
+                                    />
+                                </svg>
+                                <span className="text-sm font-semibold leading-6">Google</span>
                             </button>
                         </div>
                     </form>
@@ -221,7 +293,14 @@ export default function LoginPage() {
                             "The best decision we made for our agency. Agency OS helped us scale from 5 to 50 employees without the chaos."
                         </p>
                         <div className="flex items-center gap-3">
-                            <img src="/images/devang.png" alt="Devang Patel" className="w-10 h-10 rounded-full object-cover" />
+                            <div className="relative w-10 h-10 rounded-full overflow-hidden">
+                                <Image
+                                    src="/images/devang.png"
+                                    alt="Devang Patel"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
                             <div>
                                 <p className="text-white font-medium text-sm">Devang Patel</p>
                                 <p className="text-gray-400 text-xs">Founder & CEO</p>
