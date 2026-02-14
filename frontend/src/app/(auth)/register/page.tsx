@@ -4,23 +4,51 @@ import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import Link from 'next/link';
-import { Mail, Lock, User, Building2, Layers, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, Building2, Layers, CheckCircle2, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+
+// Validation Schema
+const registerSchema = z.object({
+    fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+    email: z.string().email('Please enter a valid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+    orgName: z.string().optional(),
+});
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
     const { register: registerAuth } = useAuthStore();
     const router = useRouter();
-    const { register, handleSubmit, formState: { isSubmitting } } = useForm();
-    const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [serverError, setServerError] = useState('');
 
-    const onSubmit = async (data: any) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<RegisterFormValues>({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            fullName: '',
+            email: '',
+            password: '',
+            orgName: '',
+        },
+    });
+
+    const onSubmit = async (data: RegisterFormValues) => {
         try {
-            setError('');
+            setServerError('');
             await registerAuth(data);
             router.push('/dashboard');
         } catch (e: any) {
             console.error(e);
-            setError(e.response?.data?.message || e.message || 'Registration failed');
+            setServerError(e.response?.data?.message || e.message || 'Registration failed');
         }
     };
 
@@ -28,7 +56,12 @@ export default function RegisterPage() {
         <div className="flex min-h-screen bg-white dark:bg-zinc-950 font-sans">
             {/* Left Side: Form */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative order-1">
-                <div className="w-full max-w-md space-y-8">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full max-w-md space-y-8"
+                >
                     {/* Mobile Logo */}
                     <div className="lg:hidden flex items-center gap-3 mb-8">
                         <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
@@ -44,11 +77,15 @@ export default function RegisterPage() {
                         </p>
                     </div>
 
-                    {error && (
-                        <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm border border-red-100 dark:border-red-900/30 flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4" />
-                            {error}
-                        </div>
+                    {serverError && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm border border-red-100 dark:border-red-900/30 flex items-center gap-2"
+                        >
+                            <CheckCircle2 className="w-4 h-4 shrink-0" />
+                            {serverError}
+                        </motion.div>
                     )}
 
                     <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
@@ -62,11 +99,13 @@ export default function RegisterPage() {
                                     <input
                                         {...register('fullName')}
                                         type="text"
-                                        required
-                                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-zinc-700 rounded-lg bg-gray-50 dark:bg-zinc-900/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
+                                        className={`block w-full pl-10 pr-3 py-3 border ${errors.fullName ? 'border-red-300 dark:border-red-800 focus:ring-red-500' : 'border-gray-300 dark:border-zinc-700 focus:ring-indigo-500'} rounded-lg bg-gray-50 dark:bg-zinc-900/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all sm:text-sm`}
                                         placeholder="John Doe"
                                     />
                                 </div>
+                                {errors.fullName && (
+                                    <p className="mt-1 text-xs text-red-500">{errors.fullName.message}</p>
+                                )}
                             </div>
 
                             <div>
@@ -78,11 +117,13 @@ export default function RegisterPage() {
                                     <input
                                         {...register('email')}
                                         type="email"
-                                        required
-                                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-zinc-700 rounded-lg bg-gray-50 dark:bg-zinc-900/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
+                                        className={`block w-full pl-10 pr-3 py-3 border ${errors.email ? 'border-red-300 dark:border-red-800 focus:ring-red-500' : 'border-gray-300 dark:border-zinc-700 focus:ring-indigo-500'} rounded-lg bg-gray-50 dark:bg-zinc-900/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all sm:text-sm`}
                                         placeholder="name@company.com"
                                     />
                                 </div>
+                                {errors.email && (
+                                    <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>
+                                )}
                             </div>
 
                             <div>
@@ -93,12 +134,22 @@ export default function RegisterPage() {
                                     </div>
                                     <input
                                         {...register('password')}
-                                        type="password"
-                                        required
-                                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-zinc-700 rounded-lg bg-gray-50 dark:bg-zinc-900/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
+                                        type={showPassword ? "text" : "password"}
+                                        className={`block w-full pl-10 pr-10 py-3 border ${errors.password ? 'border-red-300 dark:border-red-800 focus:ring-red-500' : 'border-gray-300 dark:border-zinc-700 focus:ring-indigo-500'} rounded-lg bg-gray-50 dark:bg-zinc-900/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all sm:text-sm`}
                                         placeholder="••••••••"
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors focus:outline-none"
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                    </button>
                                 </div>
+                                {errors.password && (
+                                    <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
+                                )}
                             </div>
 
                             <div>
@@ -121,10 +172,19 @@ export default function RegisterPage() {
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-lg shadow-indigo-500/30 transition-all hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed"
+                                className="group relative w-full flex items-center justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-lg shadow-indigo-500/30 transition-all hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
                             >
-                                {isSubmitting ? 'Creating account...' : 'Create Account'}
-                                {!isSubmitting && <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />}
+                                {isSubmitting ? (
+                                    <>
+                                        <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />
+                                        Creating account...
+                                    </>
+                                ) : (
+                                    <>
+                                        Create Account
+                                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                    </>
+                                )}
                             </button>
                         </div>
                     </form>
@@ -135,7 +195,7 @@ export default function RegisterPage() {
                             Sign in
                         </Link>
                     </p>
-                </div>
+                </motion.div>
 
                 {/* Footer Copyright */}
                 <div className="absolute bottom-6 text-xs text-gray-400 dark:text-gray-600">
@@ -150,49 +210,77 @@ export default function RegisterPage() {
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
 
                 {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, delay: 0.2 }}
+                    className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"
+                />
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, delay: 0.4 }}
+                    className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"
+                />
 
                 <div className="relative z-10 max-w-lg px-8 text-center lg:text-left">
-                    <div className="w-16 h-16 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center mb-8 border border-white/20 shadow-xl">
-                        <Layers className="text-white w-8 h-8" />
-                    </div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.3 }}
+                    >
+                        <div className="w-16 h-16 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center mb-8 border border-white/20 shadow-xl">
+                            <Layers className="text-white w-8 h-8" />
+                        </div>
 
-                    <h1 className="text-5xl font-bold text-white mb-6 leading-tight tracking-tight">
-                        Manage your agency <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300">
-                            like a pro.
-                        </span>
-                    </h1>
+                        <h1 className="text-5xl font-bold text-white mb-6 leading-tight tracking-tight">
+                            Manage your agency <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300">
+                                like a pro.
+                            </span>
+                        </h1>
 
-                    <div className="space-y-4 text-lg text-gray-300/90 font-light">
-                        <p className="flex items-center gap-3">
-                            <CheckCircle2 className="w-5 h-5 text-indigo-400" />
-                            Unlimited projects and tasks
-                        </p>
-                        <p className="flex items-center gap-3">
-                            <CheckCircle2 className="w-5 h-5 text-indigo-400" />
-                            Client portal with custom branding
-                        </p>
-                        <p className="flex items-center gap-3">
-                            <CheckCircle2 className="w-5 h-5 text-indigo-400" />
-                            Automated invoicing & payments
-                        </p>
-                    </div>
+                        <div className="space-y-4 text-lg text-gray-300/90 font-light mb-8">
+                            <p className="flex items-center gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-indigo-400" />
+                                Unlimited projects and tasks
+                            </p>
+                            <p className="flex items-center gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-indigo-400" />
+                                Client portal with custom branding
+                            </p>
+                            <p className="flex items-center gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-indigo-400" />
+                                Automated invoicing & payments
+                            </p>
+                        </div>
+                    </motion.div>
 
                     {/* Testimonial Card */}
-                    <div className="mt-12 p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.5 }}
+                        className="mt-12 p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl"
+                    >
                         <p className="text-gray-200 italic mb-4">
                             "Agency OS effectively replaced 4 different tools we were using. It keeps our entire team and clients synced."
                         </p>
                         <div className="flex items-center gap-3">
-                            <img src="/images/devang.png" alt="Devang Patel" className="w-10 h-10 rounded-full object-cover" />
+                            <div className="relative w-10 h-10 rounded-full overflow-hidden">
+                                <Image
+                                    src="/images/devang.png"
+                                    alt="Devang Patel"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
                             <div>
                                 <p className="text-white font-medium text-sm">Devang Patel</p>
                                 <p className="text-gray-400 text-xs">Founder & CEO</p>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </div>

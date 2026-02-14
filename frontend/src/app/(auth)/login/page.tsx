@@ -183,6 +183,7 @@ export default function LoginPage() {
                         <div className="grid grid-cols-2 gap-3">
                             <button
                                 type="button"
+                                onClick={() => alert('GitHub login coming soon!')}
                                 className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F] dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800 transition-colors"
                             >
                                 <svg className="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
@@ -201,6 +202,7 @@ export default function LoginPage() {
 
                             <button
                                 type="button"
+                                onClick={() => alert('Google login coming soon!')}
                                 className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F] dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800 transition-colors"
                             >
                                 <svg className="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
