@@ -139,7 +139,7 @@ export default function DashboardLayout() {
                 </div>
 
                 {/* Global AI Assistant */}
-                <AIAssistant />
+                <AIAssistant defaultOrgId={orgs.length > 0 ? orgs[0].organization.id : undefined} />
             </div>
         </AuthGuard>
     );

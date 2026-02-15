@@ -111,9 +111,17 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
             return next(new AppError('Please provide email and password', 400));
         }
 
+        console.log('Login attempt for email:', email);
         const user = await prisma.user.findUnique({ where: { email } });
 
-        if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+        if (!user) {
+            console.log('User not found for email:', email);
+            return next(new AppError('Incorrect email or password', 401));
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(password, user.passwordHash);
+        if (!isPasswordCorrect) {
+            console.log('Incorrect password for email:', email);
             return next(new AppError('Incorrect email or password', 401));
         }
 

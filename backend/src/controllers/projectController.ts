@@ -147,6 +147,15 @@ export const createTask = async (req: AuthRequest, res: Response, next: NextFunc
             );
         }
 
+        // Add Audit Log
+        await logActivity(
+            task.project.client.organizationId,
+            req.user.id,
+            'CREATE_TASK',
+            'Task',
+            { taskId: task.id, title: task.title }
+        );
+
         try {
             getIO().to(`project:${projectId}`).emit('task_created', task);
         } catch (e) {
@@ -216,6 +225,21 @@ export const updateTask = async (req: AuthRequest, res: Response, next: NextFunc
             });
             if (fullTask) {
                 getIO().to(`project:${fullTask.projectId}`).emit('task_updated', task);
+
+                // Fetch orgId for audit log
+                const project = await prisma.project.findUnique({
+                    where: { id: fullTask.projectId },
+                    include: { client: true }
+                });
+                if (project) {
+                    await logActivity(
+                        project.client.organizationId,
+                        req.user.id,
+                        'UPDATE_TASK',
+                        'Task',
+                        { taskId: task.id, status, priority }
+                    );
+                }
             }
         } catch (e) {
             console.warn('Socket emit update failed');
@@ -242,6 +266,21 @@ export const deleteTask = async (req: AuthRequest, res: Response, next: NextFunc
 
         try {
             getIO().to(`project:${task.projectId}`).emit('task_deleted', { taskId });
+
+            // Fetch orgId for audit log
+            const project = await prisma.project.findUnique({
+                where: { id: task.projectId },
+                include: { client: true }
+            });
+            if (project) {
+                await logActivity(
+                    project.client.organizationId,
+                    req.user.id,
+                    'DELETE_TASK',
+                    'Task',
+                    { taskId }
+                );
+            }
         } catch (e) {
             console.warn('Socket emit delete failed');
         }

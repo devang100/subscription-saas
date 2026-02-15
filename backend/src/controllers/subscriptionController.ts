@@ -66,8 +66,25 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response, nex
 };
 
 export const getSubscription = async (req: AuthRequest, res: Response, next: NextFunction) => {
-    // Get current sub details
-    res.status(200).json({ success: true, data: {} });
+    try {
+        const orgId = req.params.orgId as string;
+
+        const subscription = await prisma.subscription.findUnique({
+            where: { organizationId: orgId },
+            include: { plan: true }
+        });
+
+        if (!subscription) {
+            // It's possible an org has no subscription record if they are on a legacy free tier that wasn't created as a subscription object,
+            // or if the subscription creation failed.
+            // We can return null or a default "Free" state.
+            return res.status(200).json({ success: true, data: null });
+        }
+
+        res.status(200).json({ success: true, data: subscription });
+    } catch (error) {
+        next(new AppError('Failed to fetch subscription details', 500));
+    }
 };
 
 // Emergency Seed Endpoint for Production
@@ -79,7 +96,7 @@ export const seedPlans = async (req: AuthRequest, res: Response, next: NextFunct
             { id: 'FREE', name: 'Free', stripePriceId: null, maxUsers: 2 }
         ];
 
-        const results = [];
+        const results: any[] = [];
         for (const p of plans) {
             const result = await prisma.plan.upsert({
                 where: { id: p.id },

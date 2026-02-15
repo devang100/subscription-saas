@@ -37,3 +37,7 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
         return next(new AppError('Not authorized', 401));
     }
 };
+
+// Export as both 'protect' and 'authenticate' for compatibility
+export const authenticate = protect;
+

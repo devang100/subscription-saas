@@ -17,6 +17,7 @@ import portalRoutes from './routes/portal.routes';
 import reportRoutes from './routes/report.routes';
 import contactRoutes from './routes/contact.routes';
 import newsletterRoutes from './routes/newsletter.routes';
+import aiRoutes from './routes/ai.routes';
 import path from 'path';
 
 const app = express();
@@ -55,6 +56,8 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api', projectRoutes); // Clients, Projects, Tasks
 app.use('/api/contact', contactRoutes);
 app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/ai', aiRoutes); // AI Assistant
+
 
 // Error Handling
 app.use(errorHandler);
