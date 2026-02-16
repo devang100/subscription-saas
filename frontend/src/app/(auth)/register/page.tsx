@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Link from 'next/link';
-import { Mail, Lock, User, Building2, Layers, CheckCircle2, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Building2, Layers, CheckCircle2, ArrowRight, Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
@@ -83,7 +83,7 @@ export default function RegisterPage() {
                             animate={{ opacity: 1, height: 'auto' }}
                             className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm border border-red-100 dark:border-red-900/30 flex items-center gap-2"
                         >
-                            <CheckCircle2 className="w-4 h-4 shrink-0" />
+                            <AlertCircle className="w-4 h-4 shrink-0" />
                             {serverError}
                         </motion.div>
                     )}

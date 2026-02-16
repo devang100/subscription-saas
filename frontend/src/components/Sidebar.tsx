@@ -65,6 +65,11 @@ export default function Sidebar() {
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
                     </div>
                 </div>
+                <Link href={`/dashboard/${orgId}/settings/profile`} className="flex items-center gap-2 text-xs text-gray-400 hover:text-indigo-600 px-2 py-1 transition-colors">
+                    <div className="flex items-center gap-2">
+                        <Users size={14} /> Profile
+                    </div>
+                </Link>
                 <Link href="/login" className="flex items-center gap-2 text-xs text-gray-400 hover:text-red-600 px-2 py-1 transition-colors">
                     <LogOut size={14} /> Log out
                 </Link>

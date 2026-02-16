@@ -122,35 +122,42 @@ export default function OrgDashboard() {
                 </div>
 
                 {/* Quick Actions */}
+                {/* Quick Actions */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <button className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm hover:border-indigo-500 dark:hover:border-indigo-500 hover:shadow-md transition-all text-left group">
+                    <button
+                        onClick={() => alert('Start a new project wizard coming soon!')}
+                        className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm hover:border-indigo-500 dark:hover:border-indigo-500 hover:shadow-md transition-all text-left group"
+                    >
                         <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-3 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                             <Briefcase size={20} />
                         </div>
                         <h3 className="font-semibold text-gray-900 dark:text-white text-sm">New Project</h3>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Start a new project</p>
                     </button>
-                    <button className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm hover:border-green-500 dark:hover:border-green-500 hover:shadow-md transition-all text-left group">
+
+                    <Link href={`/dashboard/${orgId}/clients`} className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm hover:border-green-500 dark:hover:border-green-500 hover:shadow-md transition-all text-left group">
                         <div className="w-10 h-10 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600 dark:text-green-400 mb-3 group-hover:bg-green-600 group-hover:text-white transition-colors">
                             <Users size={20} />
                         </div>
                         <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Add Client</h3>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Register a new client</p>
-                    </button>
-                    <button className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-md transition-all text-left group">
+                    </Link>
+
+                    <Link href={`/dashboard/${orgId}/users`} className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-md transition-all text-left group">
                         <div className="w-10 h-10 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-3 group-hover:bg-purple-600 group-hover:text-white transition-colors">
                             <Users size={20} />
                         </div>
                         <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Invite Team</h3>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Send invitations</p>
-                    </button>
-                    <button className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm hover:border-orange-500 dark:hover:border-orange-500 hover:shadow-md transition-all text-left group">
+                    </Link>
+
+                    <Link href={`/dashboard/${orgId}/reports`} className="p-4 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm hover:border-orange-500 dark:hover:border-orange-500 hover:shadow-md transition-all text-left group">
                         <div className="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-600 dark:text-orange-400 mb-3 group-hover:bg-orange-600 group-hover:text-white transition-colors">
                             <Activity size={20} />
                         </div>
                         <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Generate Report</h3>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Export analytics</p>
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Chart & Activity Feed */}

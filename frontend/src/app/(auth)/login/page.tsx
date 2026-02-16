@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, Lock, Layers, ArrowRight, CheckCircle2, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Mail, Lock, Layers, ArrowRight, CheckCircle2, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // Validation Schema
@@ -78,7 +78,7 @@ export default function LoginPage() {
                             animate={{ opacity: 1, height: 'auto' }}
                             className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm border border-red-100 dark:border-red-900/30 flex items-center gap-2"
                         >
-                            <CheckCircle2 className="w-4 h-4 shrink-0" />
+                            <AlertCircle className="w-4 h-4 shrink-0" />
                             {serverError}
                         </motion.div>
                     )}
